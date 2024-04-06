@@ -35,7 +35,7 @@ public static class ScheduleBankTransfer
             if (command.Amount <= 0)
                 throw new Exception("Transfer amount must be greater than 0");
 
-            var fromBankAccount = await _bankAccountRepository.GetByIdWithOwnerIdAsync(
+            var fromBankAccount = await _bankAccountRepository.GetByIdWithUserIdAsync(
                 new UserId(command.UserId),
                 new BankAccountId(command.FromBankAccountId),
                 cancellationToken);

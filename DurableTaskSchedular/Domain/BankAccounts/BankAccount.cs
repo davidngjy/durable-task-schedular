@@ -7,7 +7,7 @@ public class BankAccount : IAggregateRoot
 {
     public BankAccountId Id { get; }
 
-    public UserId OwnerId { get; }
+    public UserId UserId { get; }
 
     public Currency Currency { get; }
 
@@ -18,10 +18,10 @@ public class BankAccount : IAggregateRoot
     private readonly List<ScheduledTransfer> _scheduledTransfers = [];
     public IReadOnlyCollection<ScheduledTransfer> ScheduledTransfers => _scheduledTransfers.AsReadOnly();
 
-    public BankAccount(UserId ownerId, Currency currency)
+    public BankAccount(UserId userId, Currency currency)
     {
         Id = new BankAccountId(Guid.NewGuid());
-        OwnerId = ownerId;
+        UserId = userId;
         Currency = currency;
         Balance = new Balance(0);
         CreatedDateTime = DateTimeOffset.Now;

@@ -8,7 +8,7 @@ public static class WithdrawMoney
 {
     public record Command
     {
-        public required Guid OwnerId { get; init; }
+        public required Guid UserId { get; init; }
 
         public required Guid BankAccountId { get; init; }
 
@@ -31,8 +31,8 @@ public static class WithdrawMoney
             if (command.Amount <= 0)
                 throw new Exception("Withdraw amount must be greater than 0");
 
-            var bankAccount = await _bankAccountRepository.GetByIdWithOwnerIdAsync(
-                new UserId(command.OwnerId),
+            var bankAccount = await _bankAccountRepository.GetByIdWithUserIdAsync(
+                new UserId(command.UserId),
                 new BankAccountId(command.BankAccountId),
                 cancellationToken);
 

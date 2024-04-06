@@ -20,7 +20,7 @@ public static class GetBankAccounts
             return bankAccounts.Select(a => new ReadModels.BankAccount
             {
                 Id = a.Id.Value,
-                UserId = a.OwnerId.Value,
+                UserId = a.UserId.Value,
                 Currency = a.Currency.Code,
                 Balance = a.Balance.Amount,
                 CreatedDateTime = a.CreatedDateTime,

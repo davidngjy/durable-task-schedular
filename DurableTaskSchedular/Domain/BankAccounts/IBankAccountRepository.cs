@@ -8,7 +8,7 @@ public interface IBankAccountRepository
 
     Task<IReadOnlyCollection<BankAccount>> GetAllAsync(CancellationToken cancellationToken);
 
-    Task<BankAccount?> GetByIdWithOwnerIdAsync(UserId ownerId, BankAccountId id, CancellationToken cancellationToken);
+    Task<BankAccount?> GetByIdWithUserIdAsync(UserId userId, BankAccountId id, CancellationToken cancellationToken);
 
     Task<BankAccount?> GetByIdAsync(BankAccountId id, CancellationToken cancellationToken);
 

@@ -18,10 +18,10 @@ public class BankAccountRepository : IBankAccountRepository
     public async Task<IReadOnlyCollection<BankAccount>> GetAllAsync(CancellationToken cancellationToken)
         => await _dbContext.BankAccounts.ToListAsync(cancellationToken);
 
-    public async Task<BankAccount?> GetByIdWithOwnerIdAsync(UserId ownerId, BankAccountId id, CancellationToken cancellationToken)
+    public async Task<BankAccount?> GetByIdWithUserIdAsync(UserId userId, BankAccountId id, CancellationToken cancellationToken)
         => await _dbContext
             .BankAccounts
-            .Where(a => a.Id == id && a.OwnerId == ownerId)
+            .Where(a => a.Id == id && a.UserId == userId)
             .FirstOrDefaultAsync(cancellationToken);
 
     public async Task<BankAccount?> GetByIdAsync(BankAccountId id, CancellationToken cancellationToken)
