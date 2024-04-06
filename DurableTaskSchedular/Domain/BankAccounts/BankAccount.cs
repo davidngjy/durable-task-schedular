@@ -11,17 +11,20 @@ public class BankAccount : IAggregateRoot
 
     public Currency Currency { get; }
 
+    public DateTimeOffset CreatedDateTime { get; }
+
     public Balance Balance { get; private set; }
 
     private readonly List<ScheduledTransfer> _scheduledTransfers = [];
     public IReadOnlyCollection<ScheduledTransfer> ScheduledTransfers => _scheduledTransfers.AsReadOnly();
 
-    public BankAccount(User owner, Currency currency)
+    public BankAccount(UserId ownerId, Currency currency)
     {
         Id = new BankAccountId(Guid.NewGuid());
-        OwnerId = owner.Id;
+        OwnerId = ownerId;
         Currency = currency;
         Balance = new Balance(0);
+        CreatedDateTime = DateTimeOffset.Now;
     }
 
     public void Deposit(decimal amount) => Balance = new Balance(Balance.Amount + amount);
@@ -42,11 +45,12 @@ public class BankAccount : IAggregateRoot
         });
     }
 
-    public async Task ProcessScheduledTransferAsync(IBankAccountRepository bankAccountRepository, CancellationToken cancellationToken)
+    public async Task ProcessScheduledTransferAsync(IBankAccountRepository bankAccountRepository,
+        CancellationToken cancellationToken)
     {
         foreach (var transfer in _scheduledTransfers.Where(t => t.ScheduledDateTime <= DateTimeOffset.Now).ToList())
         {
-            var toBankAccount = await bankAccountRepository.GetById(transfer.To, cancellationToken);
+            var toBankAccount = await bankAccountRepository.GetByIdAsync(transfer.To, cancellationToken);
             if (toBankAccount is null)
                 throw new Exception("Bank Account not found");
 

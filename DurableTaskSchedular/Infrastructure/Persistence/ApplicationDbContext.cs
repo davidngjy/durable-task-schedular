@@ -8,7 +8,13 @@ namespace Infrastructure.Persistence;
 
 public class ApplicationDbContext : DbContext, IUnitOfWork
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+    public DbSet<User> Users => Set<User>();
+    public DbSet<BankAccount> BankAccounts => Set<BankAccount>();
+    public DbSet<ScheduledBankAccountCreation> ScheduledBankAccountCreations => Set<ScheduledBankAccountCreation>();
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    {
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

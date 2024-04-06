@@ -4,6 +4,9 @@ public interface IScheduledBankAccountCreationRepository
 {
     void Add(ScheduledBankAccountCreation scheduledBankAccountCreation);
 
-    Task<IReadOnlyCollection<ScheduledBankAccountCreation>> GetReadyForCreationAsync(
-        CancellationToken cancellationToken);
+    void Remove(ScheduledBankAccountCreation scheduledBankAccountCreation);
+
+    Task<IReadOnlyCollection<ScheduledBankAccountCreation>> GetAllAsync(CancellationToken cancellationToken);
+
+    Task<IReadOnlyCollection<ScheduledBankAccountCreation>> GetReadyForCreationAsync(CancellationToken cancellationToken);
 }

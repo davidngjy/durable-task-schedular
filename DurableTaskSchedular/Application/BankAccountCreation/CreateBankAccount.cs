@@ -2,7 +2,7 @@ using Application.Abstractions;
 using Domain.BankAccounts;
 using Domain.Users;
 
-namespace Application.BankAccounts;
+namespace Application.BankAccountCreation;
 
 public static class CreateBankAccount
 {
@@ -19,7 +19,8 @@ public static class CreateBankAccount
         private readonly IUserRepository _userRepository;
         private readonly IBankAccountRepository _bankAccountRepository;
 
-        public Handler(IUnitOfWork unitOfWork, IUserRepository userRepository, IBankAccountRepository bankAccountRepository)
+        public Handler(IUnitOfWork unitOfWork, IUserRepository userRepository,
+            IBankAccountRepository bankAccountRepository)
         {
             _unitOfWork = unitOfWork;
             _userRepository = userRepository;
@@ -37,7 +38,7 @@ public static class CreateBankAccount
                 throw new Exception($"User Id {command.UserId} not found.");
 
             var newBankAccount = new BankAccount(
-                user,
+                user.Id,
                 currency);
 
             _bankAccountRepository.Add(newBankAccount);
