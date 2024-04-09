@@ -1,6 +1,5 @@
 using Application.Abstractions;
 using Domain.BankAccounts;
-using Domain.Users;
 
 namespace Application.BankAccounts;
 
@@ -8,8 +7,6 @@ public static class DepositMoney
 {
     public record Command
     {
-        public required Guid UserId { get; init; }
-
         public required Guid BankAccountId { get; init; }
 
         public required decimal Amount { get; init; }
@@ -31,8 +28,7 @@ public static class DepositMoney
             if (command.Amount <= 0)
                 throw new Exception("Deposit amount must be greater than 0");
 
-            var bankAccount = await _bankAccountRepository.GetByIdWithUserIdAsync(
-                new UserId(command.UserId),
+            var bankAccount = await _bankAccountRepository.GetByIdAsync(
                 new BankAccountId(command.BankAccountId),
                 cancellationToken);
 

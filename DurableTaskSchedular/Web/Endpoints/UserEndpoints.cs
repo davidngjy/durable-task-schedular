@@ -34,7 +34,7 @@ public static class UserEndpoints
 
     public static async Task<Created> CreateUserAsync(
         [FromServices] CreateUser.Handler handler,
-        [FromBody] CreateUserRequest request,
+        [FromBody] CreateNewUser request,
         CancellationToken cancellationToken)
     {
         await handler

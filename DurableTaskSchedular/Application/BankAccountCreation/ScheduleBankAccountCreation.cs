@@ -22,7 +22,8 @@ public static class ScheduleBankAccountCreation
         private readonly IUserRepository _userRepository;
         private readonly IScheduledBankAccountCreationRepository _scheduledBankAccountCreationRepository;
 
-        public Handler(IUnitOfWork unitOfWork,
+        public Handler(
+            IUnitOfWork unitOfWork,
             IScheduledBankAccountCreationRepository scheduledBankAccountCreationRepository,
             IUserRepository userRepository)
         {

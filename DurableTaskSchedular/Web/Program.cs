@@ -11,5 +11,6 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.MapUserEndpoints();
+app.MapBankAccountEndpoints();
 
 app.Run();

@@ -8,6 +8,12 @@ public class User : IAggregateRoot
 
     public Name Name { get; }
 
+    private User()
+    {
+        Id = default!;
+        Name = default!;
+    }
+
     public User(Name name)
     {
         Id = new UserId(Guid.NewGuid());
