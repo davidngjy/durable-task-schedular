@@ -7,18 +7,18 @@ public class CurrencyTest
     [Fact]
     public void TestEqual()
     {
-        var x = Currency.FromCode("AUD");
+        var x = Currency.TryFromCode("AUD");
         var y = Currency.AUD;
 
-        Assert.Equal(x ,y);
+        Assert.Equal(x, y);
     }
 
     [Fact]
     public void TestNotEqual()
     {
-        var x = Currency.FromCode("AUD");
+        var x = Currency.TryFromCode("AUD");
         var y = Currency.NZD;
 
-        Assert.NotEqual(x ,y);
+        Assert.NotEqual(x, y);
     }
 }

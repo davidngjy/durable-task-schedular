@@ -35,7 +35,7 @@ public static class ScheduleBankAccountCreation
         public async Task<ScheduledBankAccountCreationId> HandleAsync(Command command,
             CancellationToken cancellationToken)
         {
-            var currency = Currency.FromCode(command.Currency);
+            var currency = Currency.TryFromCode(command.Currency);
             if (currency is null)
                 throw new Exception($"Currency {command.Currency} is not supported.");
 

@@ -10,6 +10,7 @@ public class User : IAggregateRoot
 
     private User()
     {
+        // For EF Core
         Id = default!;
         Name = default!;
     }

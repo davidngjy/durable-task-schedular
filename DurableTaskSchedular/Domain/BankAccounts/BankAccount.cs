@@ -18,6 +18,16 @@ public class BankAccount : IAggregateRoot
     private readonly List<ScheduledTransfer> _scheduledTransfers = [];
     public IReadOnlyCollection<ScheduledTransfer> ScheduledTransfers => _scheduledTransfers.AsReadOnly();
 
+    private BankAccount()
+    {
+        // For EF Core
+        Id = default!;
+        UserId = default!;
+        Currency = default!;
+        CreatedDateTime = default!;
+        Balance = default!;
+    }
+
     public BankAccount(UserId userId, Currency currency)
     {
         Id = new BankAccountId(Guid.NewGuid());
@@ -45,7 +55,8 @@ public class BankAccount : IAggregateRoot
         });
     }
 
-    public async Task ProcessScheduledTransferAsync(IBankAccountRepository bankAccountRepository,
+    public async Task ProcessScheduledTransferAsync(
+        IBankAccountRepository bankAccountRepository,
         CancellationToken cancellationToken)
     {
         foreach (var transfer in _scheduledTransfers.Where(t => t.ScheduledDateTime <= DateTimeOffset.Now).ToList())

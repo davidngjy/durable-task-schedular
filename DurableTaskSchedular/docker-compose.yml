@@ -1,0 +1,16 @@
+﻿services:
+  web:
+    image: web
+    build:
+      context: .
+      dockerfile: Web/Dockerfile
+    environment:
+      - ConnectionStrings__Postgresql="Server=postgres;Port=5432;Database=postgres;User Id=postgres;Password=password;"
+
+  postgres:
+    image: postgres:16
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+    ports:
+      - 5432:5432

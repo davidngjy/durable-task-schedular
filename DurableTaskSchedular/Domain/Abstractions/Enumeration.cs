@@ -1,4 +1,5 @@
 using System.Reflection;
+using Domain.Exceptions;
 
 namespace Domain.Abstractions;
 
@@ -6,8 +7,11 @@ public abstract class Enumeration<T> : IEquatable<T> where T : class
 {
     public abstract string Code { get; }
 
-    public static T? FromCode(string code) =>
+    public static T? TryFromCode(string code) =>
         Enums.GetValueOrDefault(code.ToUpper());
+
+    public static T FromCode(string code) =>
+        Enums.GetValueOrDefault(code.ToUpper()) ?? throw new EnumerationNotFoundException($"{code} is not found in {typeof(T).Name}");
 
     private static readonly Dictionary<string, T> Enums = typeof(T)
         .GetProperties(BindingFlags.Static | BindingFlags.Public)

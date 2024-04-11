@@ -17,10 +17,5 @@ public class ApplicationDbContext : DbContext, IUnitOfWork
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<BankAccount>();
-        modelBuilder.Entity<ScheduledTransfer>();
-        modelBuilder.Entity<ScheduledBankAccountCreation>();
-        modelBuilder.Entity<User>();
-    }
+        => modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 }

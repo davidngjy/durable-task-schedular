@@ -5,6 +5,7 @@ using Domain.Users;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure;
@@ -19,9 +20,11 @@ public static class DependencyInjection
             .AddScoped<IUserRepository, UserRepository>();
 
         serviceCollection
-            .AddDbContext<ApplicationDbContext>(opt =>
+            .AddDbContext<ApplicationDbContext>((provider, opt) =>
             {
-                opt.UseInMemoryDatabase("in-memory-db");
+                var configuration = provider.GetRequiredService<IConfiguration>();
+                var postgresConnectionString = configuration.GetConnectionString("Postgresql");
+                opt.UseNpgsql(postgresConnectionString);
             });
 
         serviceCollection.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());

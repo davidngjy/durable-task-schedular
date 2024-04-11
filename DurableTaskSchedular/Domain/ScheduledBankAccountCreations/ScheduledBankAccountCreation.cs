@@ -14,6 +14,15 @@ public class ScheduledBankAccountCreation : IAggregateRoot
 
     public UserId UserId { get; }
 
+    private ScheduledBankAccountCreation()
+    {
+        // For EF Core
+        Id = default!;
+        Currency = default!;
+        ScheduleDateTime = default!;
+        UserId = default!;
+    }
+
     public ScheduledBankAccountCreation(DateTimeOffset scheduleDateTime, User user, Currency currency)
     {
         ScheduleDateTime = scheduleDateTime;
