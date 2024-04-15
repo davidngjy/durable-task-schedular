@@ -9,6 +9,9 @@ public class ScheduledTransferConfiguration : IEntityTypeConfiguration<Scheduled
     public void Configure(EntityTypeBuilder<ScheduledTransfer> builder)
     {
         builder
+            .ToTable("scheduled_transfers");
+
+        builder
             .HasKey(x => x.Id);
 
         builder
@@ -21,8 +24,12 @@ public class ScheduledTransferConfiguration : IEntityTypeConfiguration<Scheduled
             );
 
         builder
-            .Property<Guid>("BankAccountId")
-            .HasColumnName("bank_account_id");
+            .Property<BankAccountId>("BankAccountId")
+            .HasColumnName("bank_account_id")
+            .HasConversion(
+                x => x.Value,
+                x => new BankAccountId(x)
+            );
 
         builder
             .Property(x => x.To)

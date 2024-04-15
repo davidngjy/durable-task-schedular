@@ -7,6 +7,8 @@ builder.Services.AddWebServices();
 
 var app = builder.Build();
 
+app.RunMigration();
+
 app.UseSwagger();
 app.UseSwaggerUI();
 

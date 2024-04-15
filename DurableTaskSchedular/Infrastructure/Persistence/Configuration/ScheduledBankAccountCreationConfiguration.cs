@@ -11,6 +11,9 @@ public class ScheduledBankAccountCreationConfiguration : IEntityTypeConfiguratio
     public void Configure(EntityTypeBuilder<ScheduledBankAccountCreation> builder)
     {
         builder
+            .ToTable("scheduled_bank_account_creations");
+
+        builder
             .HasKey(x => x.Id);
 
         builder
@@ -45,6 +48,7 @@ public class ScheduledBankAccountCreationConfiguration : IEntityTypeConfiguratio
         builder
             .HasOne<User>()
             .WithMany()
-            .HasForeignKey(x => x.UserId);
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -10,6 +10,9 @@ public class BankAccountConfiguration : IEntityTypeConfiguration<BankAccount>
     public void Configure(EntityTypeBuilder<BankAccount> builder)
     {
         builder
+            .ToTable("bank_accounts");
+
+        builder
             .HasKey(x => x.Id);
 
         builder
@@ -54,13 +57,13 @@ public class BankAccountConfiguration : IEntityTypeConfiguration<BankAccount>
         builder
             .HasMany(x => x.ScheduledTransfers)
             .WithOne()
-            // .HasPrincipalKey(x => x.Id)
             .HasForeignKey("BankAccountId")
             .IsRequired();
 
         builder
             .HasOne<User>()
             .WithMany()
-            .HasForeignKey(x => x.UserId);
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
