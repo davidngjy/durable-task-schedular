@@ -65,5 +65,9 @@ public class BankAccountConfiguration : IEntityTypeConfiguration<BankAccount>
             .WithMany()
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder
+            .Navigation(x => x.ScheduledTransfers)
+            .AutoInclude();
     }
 }

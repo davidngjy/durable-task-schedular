@@ -24,6 +24,6 @@ public class ScheduledBankAccountCreationRepository : IScheduledBankAccountCreat
     public async Task<IReadOnlyCollection<ScheduledBankAccountCreation>> GetReadyForCreationAsync(CancellationToken cancellationToken)
         => await _dbContext
             .ScheduledBankAccountCreations
-            .Where(c => c.ScheduleDateTime <= DateTimeOffset.Now)
+            .Where(c => c.ScheduleDateTime <= DateTimeOffset.UtcNow)
             .ToListAsync(cancellationToken);
 }

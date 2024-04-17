@@ -12,11 +12,13 @@ public static class DependencyInjection
         serviceCollection
             .AddTransient<CreateBankAccount.Handler>()
             .AddTransient<ExecuteReadyForCreationBankAccounts.Handler>()
+            .AddTransient<GetScheduledBankAccountCreations.Handler>()
             .AddTransient<ScheduleBankAccountCreation.Handler>();
 
         serviceCollection
             .AddTransient<DepositMoney.Handler>()
             .AddTransient<ExecuteReadyForBankTransfer.Handler>()
+            .AddTransient<GetBankAccounts.Handler>()
             .AddTransient<ScheduleBankTransfer.Handler>()
             .AddTransient<WithdrawMoney.Handler>();
 

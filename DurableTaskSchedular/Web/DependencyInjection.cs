@@ -1,4 +1,5 @@
 using Application;
+using DurableTaskSchedular.Web.BackgroundServices;
 using Infrastructure;
 
 namespace DurableTaskSchedular.Web;
@@ -14,6 +15,10 @@ public static class DependencyInjection
         serviceCollection
             .AddApplicationServices()
             .AddInfrastructureServices();
+
+        serviceCollection
+            .AddHostedService<ScheduledBankAccountCreationProcessor>()
+            .AddHostedService<ScheduledBankTransferProcessor>();
 
         return serviceCollection;
     }

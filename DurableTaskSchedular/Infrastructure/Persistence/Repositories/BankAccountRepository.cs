@@ -33,6 +33,6 @@ public class BankAccountRepository : IBankAccountRepository
     public async Task<IReadOnlyCollection<BankAccount>> GetWithReadyForTransferAsync(CancellationToken cancellationToken)
         => await _dbContext
             .BankAccounts
-            .Where(a => a.ScheduledTransfers.Any(t => t.ScheduledDateTime <= DateTimeOffset.Now))
+            .Where(a => a.ScheduledTransfers.Any(t => t.ScheduledDateTime <= DateTimeOffset.UtcNow))
             .ToListAsync(cancellationToken);
 }

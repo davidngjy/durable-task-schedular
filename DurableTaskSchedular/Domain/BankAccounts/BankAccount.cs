@@ -34,7 +34,7 @@ public class BankAccount : IAggregateRoot
         UserId = userId;
         Currency = currency;
         Balance = new Balance(0);
-        CreatedDateTime = DateTimeOffset.Now;
+        CreatedDateTime = DateTimeOffset.UtcNow;
     }
 
     public void Deposit(decimal amount) => Balance = new Balance(Balance.Amount + amount);
@@ -59,7 +59,7 @@ public class BankAccount : IAggregateRoot
         IBankAccountRepository bankAccountRepository,
         CancellationToken cancellationToken)
     {
-        foreach (var transfer in _scheduledTransfers.Where(t => t.ScheduledDateTime <= DateTimeOffset.Now).ToList())
+        foreach (var transfer in _scheduledTransfers.Where(t => t.ScheduledDateTime <= DateTimeOffset.UtcNow).ToList())
         {
             var toBankAccount = await bankAccountRepository.GetByIdAsync(transfer.To, cancellationToken);
             if (toBankAccount is null)
@@ -76,7 +76,7 @@ public class BankAccount : IAggregateRoot
     {
         var availableBalance = _scheduledTransfers
             .Aggregate(
-                0m,
+                Balance.Amount,
                 (acc, t) => acc + t.Amount);
 
         return new Balance(availableBalance);
