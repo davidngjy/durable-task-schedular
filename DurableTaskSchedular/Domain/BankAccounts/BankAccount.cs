@@ -41,11 +41,11 @@ public class BankAccount : IAggregateRoot
 
     public void Withdraw(decimal amount) => Balance = new Balance(Balance.Amount - amount);
 
-    public void ScheduleTransfer(BankAccount to, decimal amount, DateTimeOffset scheduleDateTime)
+    public Result ScheduleTransfer(BankAccount to, decimal amount, DateTimeOffset scheduleDateTime)
     {
         var availableBalance = GetCurrentAvailableBalance();
         if (availableBalance.Amount - amount < 0)
-            throw new Exception("Insufficient balance");
+            return BankAccountFailures.InsufficientAvailableBalance(availableBalance.Amount, amount);
 
         _scheduledTransfers.Add(new ScheduledTransfer
         {
@@ -53,6 +53,8 @@ public class BankAccount : IAggregateRoot
             ScheduledDateTime = scheduleDateTime.ToUniversalTime(),
             Amount = amount
         });
+
+        return SuccessfulResult.Ok();
     }
 
     public async Task ProcessScheduledTransferAsync(

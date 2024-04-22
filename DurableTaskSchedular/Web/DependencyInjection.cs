@@ -10,7 +10,9 @@ public static class DependencyInjection
     {
         serviceCollection
             .AddSwaggerGen()
-            .AddEndpointsApiExplorer();
+            .AddEndpointsApiExplorer()
+            .AddProblemDetails()
+            .AddHttpContextAccessor();
 
         serviceCollection
             .AddApplicationServices()

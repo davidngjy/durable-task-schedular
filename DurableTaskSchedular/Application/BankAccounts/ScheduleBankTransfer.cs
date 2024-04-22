@@ -1,4 +1,5 @@
 using Application.Abstractions;
+using Domain.Abstractions;
 using Domain.BankAccounts;
 
 namespace Application.BankAccounts;
@@ -27,29 +28,36 @@ public static class ScheduleBankTransfer
             _bankAccountRepository = bankAccountRepository;
         }
 
-        public async Task HandleAsync(Command command, CancellationToken cancellationToken)
+        public async Task<Result> HandleAsync(Command command, CancellationToken cancellationToken)
         {
             if (command.Amount <= 0)
-                throw new Exception("Transfer amount must be greater than 0");
+                return BankAccountFailures.InvalidTransactionAmount(command.Amount);
 
+            var fromBankAccountId = new BankAccountId(command.FromBankAccountId);
             var fromBankAccount = await _bankAccountRepository.GetByIdAsync(
-                new BankAccountId(command.FromBankAccountId),
-                cancellationToken);
+                fromBankAccountId,
+                cancellationToken
+            );
 
             if (fromBankAccount is null)
-                throw new Exception(
-                    $"Unable to find bank account with BankAccountId {command.FromBankAccountId}");
+                return BankAccountFailures.UnableToFindBankAccount(fromBankAccountId);
 
+            var toBankAccountId = new BankAccountId(command.ToBankAccountId);
             var toBankAccount = await _bankAccountRepository.GetByIdAsync(
-                new BankAccountId(command.ToBankAccountId),
-                cancellationToken);
+                toBankAccountId,
+                cancellationToken
+            );
 
             if (toBankAccount is null)
-                throw new Exception($"Unable to find bank account {command.ToBankAccountId}");
+                return BankAccountFailures.UnableToFindBankAccount(toBankAccountId);
 
-            fromBankAccount.ScheduleTransfer(toBankAccount, command.Amount, command.ScheduleDateTime);
+            var result = fromBankAccount.ScheduleTransfer(toBankAccount, command.Amount, command.ScheduleDateTime);
+            if (result is not SuccessfulResult)
+                return result;
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+            return SuccessfulResult.Created();
         }
     }
 }

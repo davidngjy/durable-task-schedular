@@ -1,6 +1,7 @@
 using Application.BankAccountCreation;
 using Application.BankAccounts;
 using Application.ReadModels;
+using Domain.Abstractions;
 using DurableTaskSchedular.Web.Requests;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -93,7 +94,7 @@ public static class BankAccountEndpoints
         return TypedResults.NoContent();
     }
 
-    public static async Task<NoContent> ScheduleTransferAsync(
+    public static async Task<Results<NoContent, ProblemHttpResult>> ScheduleTransferAsync(
         [FromServices] ScheduleBankTransfer.Handler handler,
         [FromRoute(Name = "bank_account_id")] Guid bankAccountId,
         [FromBody] ScheduleNewBankTransfer request,
@@ -107,8 +108,13 @@ public static class BankAccountEndpoints
             ScheduleDateTime = request.ScheduleDateTime
         };
 
-        await handler.HandleAsync(command, cancellationToken);
+        var result = await handler.HandleAsync(command, cancellationToken);
 
-        return TypedResults.NoContent();
+        return result switch
+        {
+            SuccessfulResult _ => TypedResults.NoContent(),
+            FailureResult failureResult => failureResult.MapToHttpResult(),
+            _ => throw new ArgumentOutOfRangeException(nameof(result))
+        };
     }
 }
