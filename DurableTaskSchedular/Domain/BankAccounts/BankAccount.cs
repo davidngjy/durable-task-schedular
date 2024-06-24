@@ -57,7 +57,7 @@ public class BankAccount : IAggregateRoot
         return SuccessfulResult.Ok();
     }
 
-    public async Task ProcessScheduledTransferAsync(
+    public async Task<Result> ProcessScheduledTransferAsync(
         IBankAccountRepository bankAccountRepository,
         CancellationToken cancellationToken)
     {
@@ -65,13 +65,15 @@ public class BankAccount : IAggregateRoot
         {
             var toBankAccount = await bankAccountRepository.GetByIdAsync(transfer.To, cancellationToken);
             if (toBankAccount is null)
-                throw new Exception("Bank Account not found");
+                return BankAccountFailures.UnableToFindBankAccount(transfer.To);
 
             Withdraw(transfer.Amount);
             toBankAccount.Deposit(transfer.Amount);
 
             _scheduledTransfers.RemoveAll(t => t.Id == transfer.Id);
         }
+
+        return SuccessfulResult.Ok();
     }
 
     private Balance GetCurrentAvailableBalance()

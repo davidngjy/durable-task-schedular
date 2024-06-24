@@ -1,4 +1,6 @@
 using Application.Abstractions;
+using Application.Extensions;
+using Domain.Abstractions;
 using Domain.BankAccounts;
 using Microsoft.Extensions.Logging;
 
@@ -26,7 +28,9 @@ public static class ExecuteReadyForBankTransfer
 
             foreach (var account in accounts)
             {
-                await account.ProcessScheduledTransferAsync(_bankAccountRepository, cancellationToken);
+                var result = await account.ProcessScheduledTransferAsync(_bankAccountRepository, cancellationToken);
+                if (result is FailureResult failureResult)
+                    _logger.LogFailureResult(failureResult);
             }
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
